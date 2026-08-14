@@ -9,24 +9,24 @@ A reference collection of inference optimization techniques for vLLM and llm-d. 
 
 ## Technique overview
 
-The below table gives an overview of the optimization techniques, including their major benefit(s), trade off.
+The below table gives an overview of the optimization techniques, including their major benefit(s), trade off, complexity, and recommendation.
 
-The complexity to implement each optimization is also shown, out of:
+The complexity to implement each optimization is shown, out of:
 
-🟢 - Easy
+- 🟢 - Easy
+- 🟠 - Medium
+- 🔴 - Hard
 
-🟠 - Medium
+Recommendations are a binary pass (✅) or fail (❌). Information for why techniques are not recommended will be in their respective folders' `README.md`.
 
-🔴 - Hard
-
-| Optimisation | Benefit | Trade-off | Complexity |
-|---|---|---|---|
-| [vLLM PyTorch Compile Cache](optimizations/vllm-pytorch-compile-cache/) |  Model Load Time | - | 🟢 |
-| [vLLM InstantTensor](optimizations/vllm-instanttensor-loader/) | Model Load Time | - | 🟠 |
-| [Quantization](optimizations/quantization/) | Memory footprint + Throughput | Model Quality | 🟠 |
+| Optimisation | Benefit | Trade-off | Complexity | Recommended
+|---|---|---|---|---|
+| [vLLM PyTorch Compile Cache](optimizations/vllm-pytorch-compile-cache/) |  Model Load Time | - | 🟢 | ✅
+| [vLLM InstantTensor](optimizations/vllm-instanttensor-loader/) | Model Load Time | - | 🟠 | ❌ |
+| [Quantization](optimizations/quantization/) | Memory footprint + Throughput | Model Quality | 🟠 | ✅ |
 
 ## Files
 
 - [Optimizations directory](optimizations/) : Where each optimization technique lives. An indiviudal README explaining the technique is in each directory. 
-- [Templates directory](./templates/) : Contains templates to
+- [Templates directory](./templates/) : Contains templates to help adding optimization techniques in a standardised way.
 - [optimization-index.csv](./optimization-index.csv) : A CSV containing every optimization, what it benefits, what it hinders and what it doesn't affect. Essentially a more verbose version of the table [above](./README.md#technique-overview).

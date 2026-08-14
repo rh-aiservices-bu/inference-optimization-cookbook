@@ -1,10 +1,6 @@
 # vllm-instanttensor-loader
-
-![TTFT](https://img.shields.io/badge/TTFT-Unchanged-lightgrey)
-![Throughput](https://img.shields.io/badge/Throughput-Unchanged-lightgrey)
 ![Load Time](https://img.shields.io/badge/Load%20Time-Improved-brightgreen)
-![Memory](https://img.shields.io/badge/Memory-Unchanged-lightgrey)
-![Complexity](https://img.shields.io/badge/Complexity-Unchanged-lightgrey)
+![Complexity](https://img.shields.io/badge/Complexity-Medium-yellow)
 
 <!--
 Badge colours:
@@ -16,10 +12,12 @@ Badge colours:
   green       = low complexity
 -->
 
+> ⚠️ Not a recommended optimization.
+
 > ⚠️ **Trade-offs**
 > - Requires very high storage speeds (>= 5GB/s).
 > - Supports CUDA devices and PyTorch tensors only.
-> - Requires additions to the default RHAII VLLM image.
+> - Requires additions to the default RHAIIS VLLM image.
 
 ---
 
@@ -112,7 +110,7 @@ See [`artifacts/`](artifacts/) for ready-to-use manifests and config files.
 ### Platform
 - OpenShift 4.19 on AWS
 - RHOAI 3.4
-- LocalStorage Operator
+- LocalStorage Operator (If using NVMe drives)
 
 ### Model Serving Details
 - [Qwen3.5-35B-A3B](https://huggingface.co/Qwen/Qwen3.5-35B-A3B)
@@ -120,7 +118,13 @@ See [`artifacts/`](artifacts/) for ready-to-use manifests and config files.
 
 ## Results
 
-TBD
+⚠️ Consistently when testing this technique, **no speedup has been shown**. ⚠️
+
+Every test environment that has been tried have been OpenShift running on a cloud provider (either AWS or IBM Cloud). Whether utilising cloud storage, tmpfs/ramdisks or local NVMe storage with the LocalStorage Operator, consistently, the default Safeloaders loading has been faster.
+
+InstantTensor has been shown to be significantly faster in situations like running vLLM locally with RAID 0 striped NVMe discs - however that is yet to be reflected in an OpenShift cluster.
+
+Until then, it is **not recommended to use InstantTensor, with OpenShift**.
 
 ## Further reading
 
