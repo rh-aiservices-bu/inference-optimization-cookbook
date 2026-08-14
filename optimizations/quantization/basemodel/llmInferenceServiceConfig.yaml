@@ -1,0 +1,25 @@
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceServiceConfig
+metadata:
+  annotations:
+    opendatahub.io/template-name: v3-4-2-kserve-config-llm-template-nvidia-cuda
+    platform.opendatahub.io/instance.name: default-kserve
+    openshift.io/description: vLLM NVIDIA CUDA GPU LLMInferenceServiceConfig for LLMInferenceService.
+    openshift.io/display-name: vLLM NVIDIA CUDA GPU LLMInferenceServiceConfig
+    serving.kserve.io/well-known-config: 'true'
+    internal.config.kubernetes.io/previousNamespaces: opendatahub
+    internal.config.kubernetes.io/previousKinds: LLMInferenceServiceConfig
+    platform.opendatahub.io/instance.generation: '1'
+    internal.config.kubernetes.io/previousNames: kserve-config-llm-template-nvidia-cuda
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    platform.opendatahub.io/type: OpenShift AI Self-Managed
+  name: phi-4
+  namespace: model-deployment
+spec:
+  model:
+    uri: ''
+  template:
+    containers:
+      - image: 'registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:5800e12b2a465f15961fcf34b645d79ed4f91ec9161eab22b1205d12682183c8'
+        name: main
+        resources: {}

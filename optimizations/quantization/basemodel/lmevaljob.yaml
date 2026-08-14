@@ -1,0 +1,28 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: LMEvalJob
+metadata:
+  name: phi4-mmlu-eval
+  namespace: model-deployment
+spec:
+  allowOnline: true
+  allowCodeExecution: true
+  model: local-completions
+  modelArgs:
+    - name: model
+      value: phi-4
+    - name: base_url
+      value: http://model-deployment-inference-openshift-default.openshift-ingress.svc.cluster.local/model-deployment/phi-4/v1/completions
+    - name: num_concurrent
+      value: "3"
+    - name: max_retries
+      value: "5"
+    - name: tokenized_requests
+      value: "false"
+    - name: tokenizer
+      value: microsoft/phi-4
+  taskList:
+    taskNames:
+      - mmlu
+  limit: "100"
+  logSamples: true
+  batchSize: "1"

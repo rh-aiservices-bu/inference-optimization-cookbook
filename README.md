@@ -9,7 +9,7 @@ A reference collection of inference optimization techniques for vLLM and llm-d. 
 
 ## Technique overview
 
-The below table gives an overview of the optimization techniques, including their major benefit, trade off.
+The below table gives an overview of the optimization techniques, including their major benefit(s), trade off.
 
 The complexity to implement each optimization is also shown, out of:
 
@@ -23,6 +23,7 @@ The complexity to implement each optimization is also shown, out of:
 |---|---|---|---|
 | [vLLM PyTorch Compile Cache](optimizations/vllm-pytorch-compile-cache/) |  Model Load Time | - | 🟢 |
 | [vLLM InstantTensor](optimizations/vllm-instanttensor-loader/) | Model Load Time | - | 🟠 |
+| [Quantization](optimizations/quantization/) | Memory footprint + Throughput | Model Quality | 🟠 |
 
 ## Files
 
