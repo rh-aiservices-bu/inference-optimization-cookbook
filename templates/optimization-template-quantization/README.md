@@ -16,7 +16,13 @@ if relevant / not all hardware supports it.
 
 ## Deploy Quantized Model Steps
 
-Model deployment files can be found in [artifacts](./artifacts/). These assume you already have the `namespace` and `gateway` objects deployed from the [basemodel](../basemodel/) model deployment.
+### Prerequisites
+
+- Ensure you have the `namespace` and `gateway` deployed from the [`basemodel`](../basemodel/) directory.
+
+### Steps
+
+Model deployment files can be found in [artifacts](./artifacts/). 
 
 ```bash
 oc apply -k ./artifacts

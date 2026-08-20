@@ -1,0 +1,45 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: LLMInferenceService
+metadata:
+  annotations:
+    opendatahub.io/connections: phi-4-int8
+    opendatahub.io/hardware-profile-name: gpu-profile
+    opendatahub.io/hardware-profile-namespace: redhat-ods-applications
+    opendatahub.io/model-type: generative
+    openshift.io/display-name: phi-4-int8
+    security.opendatahub.io/enable-auth: 'false'
+  name: phi-4-int8
+  namespace: model-deployment
+  finalizers:
+    - serving.kserve.io/llmisvc-finalizer
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  baseRefs:
+    - name: phi-4-int8
+  model:
+    name: phi-4-int8
+    uri: 'hf://RedHatAI/phi-4-quantized.w8a8'
+  replicas: 1
+  router:
+    gateway:
+      refs:
+        - name: model-deployment-inference
+          namespace: openshift-ingress
+    route: {}
+  template:
+    containers:
+      - name: main
+        resources:
+          limits:
+            cpu: '4'
+            memory: 8Gi
+            nvidia.com/gpu: '1'
+          requests:
+            cpu: '4'
+            memory: 8Gi
+            nvidia.com/gpu: '1'
+    tolerations:
+      - effect: NoSchedule
+        key: nvidia.com/gpu
+        operator: Exists

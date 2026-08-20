@@ -158,7 +158,7 @@ Additional information on how to run the tests yourself can be found in the [eva
 ### Platform
 - OpenShift 4.19.38 on AWS
 - RHOAI 3.4.2
-- Model(s) served with 1x NVIDIA-L40S
+- Model(s) served with 1x NVIDIA-L40S (Compute Capability 8.9)
 
 ## Results
 
@@ -176,10 +176,13 @@ Additional information on how to run the tests yourself can be found in the [eva
 
 ### Comparison Table
 
+> ⚠️ These numbers are just an indication of what it took to run these models in this particular test environment. For a more comprehensive comparison of LLM quantization performance trade-offs, look at [the scientific paper](https://arxiv.org/abs/2411.02355v4) referenced in the appendix.
+
 | Models | Overall MMLU Score | GPU Memory (KV Cache) | Runtime CPU Memory* | Test Execution Time* | 
 |--------|--------------------|-------------------------|-----|----|
-| phi-4 | 77.21% | 27.39 GiB | 7.7GiB | 19 mins | 
-| phi-4-FP8-dynamic | 77.18% | 14.74 GiB | 3.3GiB | 13 mins |
+| phi-4 | 77.21% | 27.39 GiB | 7.7 GiB | 19 mins | 
+| phi-4-FP8-dynamic | 77.18% | 14.74 GiB | 3.3 GiB | 13 mins |
+| phi-4-int8 | 77.25% | 14.74 GiB | 3.1 GiB | 15 mins |
 
 [*] : Metrics retrieved from Pod logs during runtime of the evals.
 
@@ -187,3 +190,4 @@ Additional information on how to run the tests yourself can be found in the [eva
 
 - [vLLM Quantization](https://docs.vllm.ai/en/latest/features/quantization/)
 - [Red Hat Developer Blog: "Evalhub: Because 'looks good to me' isn't a benchmark"](https://developers.redhat.com/articles/2026/05/19/evalhub-because-looks-good-me-isnt-benchmark#five_problems_that_break_ai_evaluation_at_scale)
+- [ARXIV - '"Give Me BF16 or Give Me Death"? Accuracy-Performance Trade-Offs in LLM Quantization'](https://arxiv.org/abs/2411.02355v4)
