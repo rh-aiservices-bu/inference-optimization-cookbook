@@ -1,4 +1,5 @@
-Optimisation,Complexity,Model Load Time,TTFT,Throughput,GPU Memory Usage,Host Memory Usage,Quality
-Vllm-pytorch-compile-cache,Low,🟢,❌,❌,❌,❌,❌
-Vllm-instanttensor-loader,Medium,🟢,❌,❌,❌,❌,❌
-vllm-optimization-fp8,Low,❌,🟢,🟢,🟢,🟢,🔴
+Optimisation,Recommended?,Complexity,Model Load Time,TTFT,Throughput,GPU Memory Usage,Host Memory Usage,Quality
+vllm-pytorch-compile-cache,✅,Low,🟢,❌,❌,❌,❌,❌
+vllm-instanttensor-loader,❌,Medium,🟢,❌,❌,❌,❌,❌
+vllm-optimization-fp8,✅,Low,❌,🟢,🟢,🟢,🟢,🔴
+vllm-optimization-int8,✅,Medium,❌,🟢,🟢,🟢,🟢,🔴

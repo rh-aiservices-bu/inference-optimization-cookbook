@@ -22,7 +22,6 @@ Results produced by 3 runs:
 | - social sciences| 2|none | |acc |↑ |0.8533|± |0.0099|
 | - stem | 2|none | |acc |↑ |0.7053|± |0.0099|
 
-
 ### 3rd
 
 | Groups |Version|Filter|n-shot|Metric| |Value | |Stderr|

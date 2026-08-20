@@ -8,11 +8,15 @@ This is the process of taking floating point 16 bit weights and quantizing them 
 
 The model used to compare against the base model is [RedHatAI/phi-4-FP8-dynamic](https://huggingface.co/RedHatAI/phi-4-FP8-dynamic).
 
-### W8A16 vs W8A8
+### W8A16 vs FP W8A8
 
 FP8 quantization falls into 2 categories - Weight Only (W8A16), and Weights-And-Activations (W8A8). 
 
-In W8A16, the weights are quantized to FP8, however the computation is still carried out in 16Bit floating point. In W8A8, both weights and activations are in FP8. This allows specialized FP8 tensor cores to be used, increasing speed in both memory loading and computation. Generally, W8A8 is quicker, however can suffer from more quality loss due resolution loss in the computation.
+In W8A16, the weights are quantized to FP8, however the computation is still carried out in 16Bit floating point. In W8A8, both weights and activations are in FP8. This allows specialized FP8 tensor cores to be used, increasing speed in both memory loading and computation. Generally, W8A8 is quicker, however can suffer from more quality loss due resolution loss in the computation. 
+
+This particular model we are testing is quantized to W8A8.
+
+> Note: W8A8 _can_ also refer to INT8 quantization. See [phi-4-int8 quantization](../vllm-quantization-int8/) for more info on that.
 
 ### Supported Hardware:
 
