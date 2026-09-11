@@ -3,3 +3,4 @@ vllm-pytorch-compile-cache,✅,Low,🟢,❌,❌,❌,❌,❌
 vllm-instanttensor-loader,❌,Medium,🟢,❌,❌,❌,❌,❌
 vllm-optimization-fp8,✅,Low,❌,🟢,🟢,🟢,🟢,🔴
 vllm-optimization-int8,✅,Medium,❌,🟢,🟢,🟢,🟢,🔴
+vllm-optimization-int4,✅,Low,❌,🟢,🟢,🟢,🟢,🔴
