@@ -20,8 +20,8 @@ This particular model we are testing is quantized to W8A8.
 
 ### Supported Hardware:
 
-- W8A16: NVIDIA compute capability >=7.5 (Turing onwards).
-- W8A8: NVIDIA compute capability >= 8.9 (Ada Lovelace onwards).
+- W8A16: [NVIDIA compute capability](https://developer.nvidia.com/cuda/gpus) >=7.5 (Turing onwards).
+- W8A8: [NVIDIA compute capability](https://developer.nvidia.com/cuda/gpus) >= 8.9 (Ada Lovelace onwards).
 
 ## Deploy Quantized Model Steps
 

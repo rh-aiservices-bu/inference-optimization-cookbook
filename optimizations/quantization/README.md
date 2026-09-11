@@ -183,6 +183,7 @@ Additional information on how to run the tests yourself can be found in the [eva
 | phi-4 | 77.21% | 27.39 GiB | 7.7 GiB | 19 mins | 
 | phi-4-FP8-dynamic | 77.18% | 14.74 GiB | 3.3 GiB | 13 mins |
 | phi-4-int8 | 77.25% | 14.74 GiB | 3.1 GiB | 15 mins |
+| phi-4-int4 | 76.33% | 8.5 GiB | 5.2 GiB | 12 mins |
 
 [*] : Metrics retrieved from Pod logs during runtime of the evals.
 

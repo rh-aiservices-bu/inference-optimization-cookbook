@@ -16,7 +16,7 @@ A deeper analysis of comparison between the two methods can be found in this [sc
 
 ### Supported Hardware:
 
-- NVIDIA Compute Capability 10.0> & >7.5 (i.e. Turing, Ampere, Ada, Hopper only) 
+- [NVIDIA compute capability](https://developer.nvidia.com/cuda/gpus) 10.0> & >7.5 (i.e. Turing, Ampere, Ada, Hopper only) 
 
 ## Deploy Quantized Model Steps
 
