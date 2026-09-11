@@ -52,6 +52,8 @@ There are many different variants of quantization, with their own pros and cons.
 
 That said, each deployment will be tested against the same benchmark, to demonstrate the "quality" difference, between each method. Information on how to set this up can be found in [evalhub](./evalhub/).
 
+It should be noted that this method of optimization is not difficult to apply, as many quantized versions of popular models are publically available. **The complexity comes from understanding which quantization is ideal for the usecase and hardware at hand**.
+
 ### Steps
 
 These steps are explaining how to deploy **the unquantized model** and the eval. If you don't care about running the eval, and just want files to deploy the quantized phi-4 models, go to the individual directories. i.e. [vllm-quantization-fp8](./vllm-quantization-fp8/).
