@@ -19,6 +19,6 @@ Deployment-ready files for this optimisation. Drop anything here that someone wo
 ## Structure
 
 - `llmInferenceService.yaml` : Baseline `LLMInferenceService` manifest (no speculative decoding).
-- `llmInferenceService-MTP.yaml` : Same manifest with MTP speculative decoding enabled via `VLLM_ADDITIONAL_ARGS`.
+- `llmInferenceService-MTP.yaml` : Same manifest with MTP (Multi-Token Prediction) speculative decoding enabled via `VLLM_ADDITIONAL_ARGS`.
 - `guidellm-sweep.sh` : GuideLLM command used to benchmark each deployment (fixed concurrency sweep, 1-64).
 - `results.html` : Full interactive test results - every concurrency level × every `num_speculative_tokens` value tested.
