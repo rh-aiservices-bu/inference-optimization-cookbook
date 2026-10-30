@@ -26,7 +26,9 @@ Badge colours:
 
 Speculative decoding is a process in which you draft several tokens ahead, rather than the standard 1 token per decode cycle. The model will then verify and either accept or reject the drafted token.
 
-Multi-Token Prediction (MTP) is a method where the model itself includes native multi-token prediction "heads". Unlike other speculative decoding methods, this means we don't need a separate smaller "draft" model.
+Think of it as somebody jumping in to finish your sentence. You start with "I'm going to the.." and they finish with "concert tonight". Sometimes they're correct and the sentence got out quicker. Sometimes they're wrong, and you're actually going to the airport.
+
+Multi-Token Prediction (MTP) is a specific method of speculative decoding, where the model itself includes native multi-token prediction "heads". Unlike other speculative decoding methods, this means we don't need a separate smaller "draft" model. Think of this as similar to how a smartphone can play music as well as make calls, so you don't need a separate music player.
 
 ## Before / After
 
@@ -58,6 +60,8 @@ Multi-Token Prediction (MTP) is a method where the model itself includes native 
 
   4 model passes → 4 tokens                   1 model pass → 3-4 tokens
 ```
+
+Before speculative decoding, a single cycle produces 1 token. After implementing MTP speculative decoding, a single cycle involves several tokens "guesses", and in the above example, 3 of those "guessed" tokens are accepted, therefore this cycle produced 3 tokens. 
 
 ## How to apply
 
@@ -116,7 +120,9 @@ Within MaaS, the subscription was given 99,999 tokens p/s rate limit, to act as 
 
 ## Test Results
 
-Benchmarks were run with [GuideLLM](https://github.com/vllm-project/guidellm) against the live endpoint, sweeping two variables:
+For these results, the [GuideLLM](https://github.com/vllm-project/guidellm) testing tool was used. It's developed and maintained by the vllm project, and allows for an easy way to send requests to a model, following different profiles (i.e. different input/output tokens, concurrency, etc.). 
+
+The GuideLLM test ran against the live endpoint, sweeping two variables:
 
 - **`num_speculative_tokens`**: baseline (disabled), then 1, 2, 3, 4, 5, 8, 10, 12, 16
 - **Concurrency**: 1, 2, 4, 8, 16, 32, 48, 64 simultaneous requests
