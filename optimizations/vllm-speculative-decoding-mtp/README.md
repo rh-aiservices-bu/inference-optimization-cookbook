@@ -120,9 +120,7 @@ Within MaaS, the subscription was given 99,999 tokens p/s rate limit, to act as 
 
 ## Test Results
 
-For these results, the [GuideLLM](https://github.com/vllm-project/guidellm) testing tool was used. It's developed and maintained by the vllm project, and allows for an easy way to send requests to a model, following different profiles (i.e. different input/output tokens, concurrency, etc.). 
-
-The GuideLLM test ran against the live endpoint, sweeping two variables:
+These results were produced with the [GuideLLM](https://github.com/vllm-project/guidellm) tool. It's a client side performance tool that will load test a model endpoint and produce metrics about the requests sent. In this instance, it was used to run against the live endpoint, sweeping two variables:
 
 - **`num_speculative_tokens`**: baseline (disabled), then 1, 2, 3, 4, 5, 8, 10, 12, 16
 - **Concurrency**: 1, 2, 4, 8, 16, 32, 48, 64 simultaneous requests
