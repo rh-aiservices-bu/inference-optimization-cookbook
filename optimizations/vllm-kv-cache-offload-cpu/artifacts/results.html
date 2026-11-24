@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>KV cache offloading (CPU tier) dashboard</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b;
+    --text-secondary: #52514e; --text-muted: #898781; --gridline: #e1e0d9;
+    --baseline-axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6; --series-2: #eb6834;
+    --good: #0ca30c;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #f0efec;
+    --text-secondary: #c3c2b7; --text-muted: #898781; --gridline: #2c2c2a;
+    --baseline-axis: #383835; --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5; --series-2: #d95926;
+    --good: #0ca30c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--page); color: var(--text-primary); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 32px 24px 64px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin-top: 36px; border-bottom: 1px solid var(--gridline); padding-bottom: 6px; }
+  .subtitle { font-size: 13px; color: var(--text-secondary); margin: 0 0 8px; }
+  .theme-toggle { font-size: 11px; color: var(--text-secondary); background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; cursor: pointer; float: right; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 12px 0; }
+  th, td { text-align: right; padding: 7px 10px; border-bottom: 1px solid var(--gridline); font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--text-secondary); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .legend { display: flex; gap: 16px; margin: 8px 0 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+  .s1 { background: var(--series-1); } .s2 { background: var(--series-2); }
+  .chart-group { display: flex; align-items: flex-end; gap: 28px; height: 210px; padding: 8px 8px 0; border-bottom: 1px solid var(--baseline-axis); margin-top: 8px; }
+  .chart-cluster { display: flex; align-items: flex-end; gap: 5px; flex: 1; justify-content: center; height: 100%; position: relative; }
+  .bar { width: 30px; border-radius: 4px 4px 0 0; position: relative; display: flex; align-items: flex-start; justify-content: center; }
+  .bar .bar-label { position: absolute; top: -18px; font-size: 10px; color: var(--text-secondary); white-space: nowrap; }
+  .cluster-label { text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+  .finding { border-left: 3px solid var(--series-1); background: var(--surface-1); padding: 10px 14px; font-size: 13px; margin: 10px 0; border-radius: 0 6px 6px 0; color: var(--text-secondary); }
+  .finding strong { color: var(--text-primary); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <button class="theme-toggle" id="themeToggle" type="button">Toggle dark mode</button>
+  <h1>KV cache offloading (CPU tier) — GuideLLM results</h1>
+  <p class="subtitle">Qwen2.5-7B-Instruct · 1x NVIDIA L4 per variant · real QASPER-derived workload (20 papers, 3 questions each, round-robin interleaved) · via the public MaaS gateway</p>
+
+  <h2>Mean time-to-first-token (ms) — lower is better</h2>
+  <div class="legend">
+    <div class="legend-item"><span class="swatch s1"></span>baseline (no offload)</div>
+    <div class="legend-item"><span class="swatch s2"></span>cpu-offload (6Gi)</div>
+  </div>
+  <div class="chart-group" id="ttft-chart"></div>
+
+  <h2>Throughput — completed requests/sec — higher is better</h2>
+  <div class="legend">
+    <div class="legend-item"><span class="swatch s1"></span>baseline (no offload)</div>
+    <div class="legend-item"><span class="swatch s2"></span>cpu-offload (6Gi)</div>
+  </div>
+  <div class="chart-group" id="rps-chart"></div>
+
+  <h2>Full metrics table</h2>
+  <table id="metrics-table">
+    <thead><tr><th>Variant</th><th>Concurrency</th><th>Succeeded</th><th>TTFT mean (ms)</th><th>TTFT p95 (ms)</th><th>Req/s</th><th>Output tok/s</th><th>Latency mean (s)</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="finding"><strong>Reading this chart:</strong> at concurrency 4 the two variants are within noise of each
+  other — there isn't enough GPU KV cache pressure yet for offloading to matter. The gap opens sharply at concurrency 8
+  (5.1× faster TTFT) and remains large at 16 (3.3× faster), which is the expected shape for a mechanism that only pays off
+  once the GPU is forced to evict and recompute.</div>
+</div>
+
+<script>
+const data = [
+  {"variant":"baseline","streams":4,"succ":60,"ttft_mean":1544.2,"ttft_p95":4304.6,"rps_mean":0.294,"otps_mean":44.5,"lat_mean":13.59},
+  {"variant":"baseline","streams":8,"succ":59,"ttft_mean":3553.6,"ttft_p95":7845.6,"rps_mean":0.474,"otps_mean":71.6,"lat_mean":15.91},
+  {"variant":"baseline","streams":16,"succ":60,"ttft_mean":2489.0,"ttft_p95":4871.7,"rps_mean":0.855,"otps_mean":128.9,"lat_mean":14.47},
+  {"variant":"cpu-offload","streams":4,"succ":60,"ttft_mean":1571.1,"ttft_p95":4232.0,"rps_mean":0.356,"otps_mean":53.8,"lat_mean":11.22},
+  {"variant":"cpu-offload","streams":8,"succ":59,"ttft_mean":698.7,"ttft_p95":805.5,"rps_mean":0.709,"otps_mean":106.8,"lat_mean":10.47},
+  {"variant":"cpu-offload","streams":16,"succ":60,"ttft_mean":744.6,"ttft_p95":915.7,"rps_mean":1.078,"otps_mean":162.8,"lat_mean":11.49}
+];
+
+function renderChart(elId, metricKey, fmt) {
+  const el = document.getElementById(elId);
+  const streamsList = [4, 8, 16];
+  const variants = [
+    {key: 'baseline', cls: 's1'},
+    {key: 'cpu-offload', cls: 's2'}
+  ];
+  const maxVal = Math.max(...data.map(r => r[metricKey])) * 1.15;
+  streamsList.forEach(s => {
+    const cluster = document.createElement('div');
+    cluster.style.display = 'flex';
+    cluster.style.flexDirection = 'column';
+    cluster.style.alignItems = 'center';
+    cluster.style.flex = '1';
+    cluster.style.height = '100%';
+    cluster.style.justifyContent = 'flex-end';
+
+    const barsRow = document.createElement('div');
+    barsRow.className = 'chart-cluster';
+    variants.forEach(v => {
+      const row = data.find(r => r.variant === v.key && r.streams === s);
+      const val = row ? row[metricKey] : 0;
+      const pct = (val / maxVal) * 100;
+      const bar = document.createElement('div');
+      bar.className = 'bar ' + v.cls;
+      bar.style.height = pct + '%';
+      bar.title = v.key + ' @ ' + s + ' concurrency: ' + fmt(val);
+      const lbl = document.createElement('div');
+      lbl.className = 'bar-label';
+      lbl.textContent = fmt(val);
+      bar.appendChild(lbl);
+      barsRow.appendChild(bar);
+    });
+    cluster.appendChild(barsRow);
+    const label = document.createElement('div');
+    label.className = 'cluster-label';
+    label.textContent = 'concurrency ' + s;
+    cluster.appendChild(label);
+    el.appendChild(cluster);
+  });
+}
+
+renderChart('ttft-chart', 'ttft_mean', v => Math.round(v) + 'ms');
+renderChart('rps-chart', 'rps_mean', v => v.toFixed(2));
+
+const tbody = document.querySelector('#metrics-table tbody');
+data.forEach(r => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${r.variant}</td><td>${r.streams}</td><td>${r.succ}</td>` +
+    `<td>${Math.round(r.ttft_mean)}</td><td>${Math.round(r.ttft_p95)}</td>` +
+    `<td>${r.rps_mean.toFixed(3)}</td><td>${r.otps_mean.toFixed(1)}</td><td>${r.lat_mean.toFixed(2)}</td>`;
+  tbody.appendChild(tr);
+});
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+});
+</script>
+</body>
+</html>

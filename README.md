@@ -24,6 +24,7 @@ Recommendations are a binary pass (✅) or fail (❌). Information for why techn
 | [vLLM PyTorch Compile Cache](optimizations/vllm-pytorch-compile-cache/) |  Model Load Time | - | 🟢 | ✅
 | [vLLM InstantTensor](optimizations/vllm-instanttensor-loader/) | Model Load Time | - | 🟠 | ❌ |
 | [Quantization](optimizations/quantization/) | Memory footprint + Throughput | Model Quality | 🟠 | ✅ |
+| [vLLM KV Cache Offload (CPU)](optimizations/vllm-kv-cache-offload-cpu/) | TTFT + Throughput (under cache pressure) | Host memory | 🟠 | ✅ |
 
 ## Files
 

@@ -1,0 +1,43 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: LLMInferenceService
+metadata:
+  annotations:
+    opendatahub.io/model-type: generative
+    openshift.io/display-name: ui
+  name: ui
+  namespace: kvco-bench
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  model:
+    name: ui
+    uri: 'hf://Qwen/Qwen2.5-7B-Instruct'
+  replicas: 1
+  router:
+    gateway:
+      refs:
+        - name: maas-default-gateway
+          namespace: openshift-ingress
+    route: {}
+    scheduler: {}
+  template:
+    containers:
+      - env:
+          - name: VLLM_ADDITIONAL_ARGS
+            value: '--kv-transfer-config=''{"kv_connector":"OffloadingConnector","kv_role":"kv_both","kv_connector_extra_config":{"cpu_bytes_to_use":6442450944,"eviction_policy":"lru"}}'''
+        name: main
+        image: docker.io/vllm/vllm-openai:v0.22.0 # Upstream image. Earliest version that contains KV cache offload mechanism
+        resources:
+          limits:
+            cpu: '6'
+            memory: 22Gi
+            nvidia.com/gpu: '1'
+          requests:
+            cpu: '4'
+            memory: 14Gi
+            nvidia.com/gpu: '1'
+# Tolerations section, if needed.
+#    tolerations:
+#      - effect: NoSchedule
+#        key: nvidia.com/gpu
+#        operator: Exists
