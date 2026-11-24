@@ -2,7 +2,6 @@
 
 ![TTFT](https://img.shields.io/badge/TTFT-Higher-orange)
 ![Throughput](https://img.shields.io/badge/Throughput-Improved-brightgreen)
-![Load%20Time](https://img.shields.io/badge/Load%20Time-Unchanged-lightgrey)
 ![Memory](https://img.shields.io/badge/Memory-Higher-orange)
 ![Complexity](https://img.shields.io/badge/Complexity-Medium-yellow)
 

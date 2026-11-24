@@ -1,0 +1,44 @@
+# Same model, with a 6Gi CPU-tier KV cache offload enabled.
+#
+# IMPORTANT: the /dev/shm volume override below is not optional — RHOAI's
+# base pod template caps /dev/shm at 1Gi, which is smaller than the CPU tier
+# configured here. Without this override, vLLM crashes on startup with
+# `OSError: [Errno 14] Bad address` inside the OffloadingConnector's
+# SharedOffloadRegion (see README.md#gotchas).
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceService
+metadata:
+  name: qwen25-7b-cpu-offload
+spec:
+  model:
+    name: qwen25-7b-cpu-offload
+    uri: hf://Qwen/Qwen2.5-7B-Instruct
+  replicas: 1
+  kvCacheOffloading:
+    cpu: "6Gi"
+    evictionPolicy: lru # "Least Recently Used"
+  router:
+    gateway:
+      refs:
+        - name: maas-default-gateway
+          namespace: openshift-ingress
+    route: {}
+    scheduler: {}
+  template:
+    # If your GPU nodes carry a custom taint, add a matching toleration here.
+    containers:
+      - name: main
+        resources:
+          limits:
+            nvidia.com/gpu: "1"
+            cpu: "6"
+            memory: 22Gi
+          requests:
+            nvidia.com/gpu: "1"
+            cpu: "4"
+            memory: 14Gi
+    volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 7Gi

@@ -1,11 +1,7 @@
 # vllm-pytorch-compile-cache
 
-![TTFT](https://img.shields.io/badge/TTFT-Unchanged-lightgrey)
-![Throughput](https://img.shields.io/badge/Throughput-Unchanged-lightgrey)
 ![Load%20Time](https://img.shields.io/badge/Load%20Time-Improved-brightgreen)
-![Memory](https://img.shields.io/badge/Memory-Unchanged-lightgrey)
-![Complexity](https://img.shields.io/badge/Complexity-Unchanged-lightgrey)
-
+![Complexity](https://img.shields.io/badge/Complexity-Easy-brightgreen)
 <!--
 Badge colours:
   brightgreen = improved
